@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Environment / Secrets
+.env
+.env.local
+.env.*.local
+SECRETS.txt
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# MATLAB generated
+*.asv
+*.mat
+*.xlsx
+*.pptx
+*.pdf
