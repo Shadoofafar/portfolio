@@ -1,5 +1,5 @@
 <p align="center">
-  <strong>Konstantin Zhuravel — Portfolio</strong>
+  <strong>Kostiantyn Zhuravel — Portfolio</strong>
 </p>
 
 <p align="center">
