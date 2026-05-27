@@ -28,6 +28,8 @@ A production **Learning Management System** built for a Ukrainian educational no
 
 **Key Highlights:**
 - 🔐 **Backend proxy** for Supabase RLS bypass — solves infinite recursion in role-based policies
+- 📞 **Embedded Jitsi Video Calls** — dynamic creation of secure, password-protected classrooms inside the app
+- 🎨 **Interactive Collaborative Whiteboard** — real-time drawing canvas for interactive lecture styling
 - 🔄 **Real-time YouTube synchronization** — teacher-controlled playback synced across all students via Supabase Broadcast channels
 - 📋 **Dynamic form builder** — configurable field types with submission analytics and Excel export
 - 👥 **User management** with JWT auth, rate limiting, and admin SDK operations
