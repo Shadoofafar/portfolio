@@ -4,18 +4,12 @@
 
 ---
 
-## 📸 Platform Screenshots
+## 📸 Interactive Collaborative Whiteboard
 
 <p align="center">
-  <img src="./assets/dashboard_screenshot.png" alt="LMS Course Builder & Lesson Materials Panel" width="85%" />
+  <img src="./assets/whiteboard_screenshot.jpg" alt="LMS Interactive Whiteboard & Lesson Workspace" width="85%" />
   <br />
-  <em>Fig 1: Dynamic course builder dashboard with interactive learning blocks and integrated video materials.</em>
-</p>
-
-<p align="center">
-  <img src="./assets/scheduler_screenshot.png" alt="LMS Interactive Calendar Scheduling Panel" width="85%" />
-  <br />
-  <em>Fig 2: Interactive schedule view showing calendar events, time-synchronized lessons, and Zoom API endpoints.</em>
+  <em>Fig 1: Live collaborative whiteboard screen supporting synchronized drawing, annotations, and real-time brush/color selection during lectures.</em>
 </p>
 
 ---
