@@ -1,63 +1,49 @@
 # Dobrokhimych LMS — Full-Stack Learning Management System
 
-> **Code excerpts** from a production LMS built for a Ukrainian social education initiative providing free online Chemistry & Biology classes.
+> **Curated code excerpts** from a production-grade Learning Management System built for a Ukrainian social education initiative providing free online Chemistry & Biology classes.
 
-## Architecture
+---
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        CLIENT (Browser)                         │
-│  ┌─────────────┐  ┌──────────────┐  ┌────────────────────────┐ │
-│  │  React SPA  │  │ React Router │  │  Supabase JS Client    │ │
-│  │  (Vite+TS)  │──│  (Protected  │──│  (Auth, DB, Storage,   │ │
-│  │             │  │   Routes)    │  │   Realtime Broadcast)  │ │
-│  └──────┬──────┘  └──────────────┘  └───────────┬────────────┘ │
-│         │                                       │              │
-│         │  REST (JWT)                            │  Direct      │
-└─────────┼───────────────────────────────────────┼──────────────┘
-          │                                       │
-          ▼                                       ▼
-┌─────────────────────┐              ┌──────────────────────────┐
-│  Express.js Backend │              │   Supabase Platform       │
-│                     │              │                          │
-│  • RLS Bypass Proxy │  Service     │  ┌────────────────────┐  │
-│  • Zoom OAuth API   │  Role Key    │  │  PostgreSQL (RLS)  │  │
-│  • Admin User CRUD  │──────────────│  │  + Auth + Storage  │  │
-│  • SMTP Email       │              │  │  + Broadcast       │  │
-│  • Rate Limiting    │              │  └────────────────────┘  │
-└─────────────────────┘              └──────────────────────────┘
-```
+## 🚀 Key Engineering Highlights
 
-### Why an Express Backend Proxy?
-
-Supabase's Row Level Security (RLS) policies caused an **infinite recursion** when user roles were stored in a `user_profiles` table referenced by the policies themselves:
+### 1. RLS Infinite Recursion Bypass (Express Proxy)
+* **The Challenge:** Storing roles inside a `user_profiles` table referenced by Supabase Row-Level Security (RLS) policies caused infinite lookup loops.
+* **The Solution:** A lightweight Node.js/Express server that validates client JWTs and uses the administrative **Service Role Key** (stored securely on the server) to execute restricted CRUD operations, successfully bypassing recursion while maintaining strict client-side RLS policies for non-admin queries.
 
 ```sql
--- This policy tries to check the user's role from user_profiles...
--- but the SELECT triggers this same policy again → infinite loop
-CREATE POLICY "admin_read" ON user_profiles
-  FOR SELECT USING (
-    (SELECT role FROM user_profiles WHERE id = auth.uid()) = 'admin'
-  );
+-- The problematic loop: SELECT triggers policy → policy triggers SELECT
+CREATE POLICY "admin_read" ON user_profiles FOR SELECT 
+  USING ((SELECT role FROM user_profiles WHERE id = auth.uid()) = 'admin');
 ```
 
-**Solution:** An Express server validates JWTs and uses the Service Role Key (server-side only) to bypass RLS for admin operations. Direct Supabase Client queries still go through RLS for non-admin operations — maintaining defense-in-depth.
+### 2. Real-Time Video Sync Player (Supabase Broadcast)
+* **The Highlight:** A shared class player utilizing **Supabase Realtime Broadcast channels** to synchronize video states across hundreds of students simultaneously.
+* **The Technical Detail:** Implemented strict state reference checks (`useRef`) to decouple YouTube player events from incoming network broadcasts, successfully avoiding event cascade loops and desynchronization. Includes a background click-blocker layer for student clients to prevent manual navigation.
 
-## Files in This Excerpt
+### 3. Dynamic Zoom S2S OAuth Integration
+* **The Highlight:** Direct Server-to-Server OAuth integration for automatic video class lifecycle management (create, update, delete meetings).
+* **The Technical Detail:** Implemented a zero-migration link storage strategy: both the `join_url` (for attendees) and `start_url` (for the host, containing credentials) are stored as serialized JSON inside a single database column. The frontend dynamically routes teachers/admins to the host URL and students to the participant URL on-click.
 
-| File | What It Demonstrates |
-|------|---------------------|
-| `backend/server_proxy.js` | JWT authentication middleware, Supabase Admin SDK usage, Zoom OAuth Server-to-Server flow, rate limiting, CORS, secure user CRUD |
-| `frontend/components/ScheduleView.tsx` | UI schedule component implementing **dynamic role-based Zoom link routing** (automatic host `start_url` vs student `join_url` resolution on click) |
-| `frontend/components/SyncYouTubePlayer.tsx` | Real-time video synchronization using Supabase Broadcast channels, event loop prevention with refs |
-| `frontend/contexts/AuthContext.tsx` | React Context for global auth state, session lifecycle management, API-based role resolution |
-| `frontend/types/types.ts` | TypeScript interfaces defining the entire data model (including Zoom/Jitsi scheduled classes) |
+### 4. Enforcing Tamper-Proof Business Rules
+* **The Highlight:** Restricting display name changes to exactly three per user (to prevent spoofing/spamming).
+* **The Technical Detail:** Enforced this state strictly in Supabase `app_metadata`. Since browser-based clients cannot write to `app_metadata`, this implementation is 100% tamper-proof against frontend injection or client-side SDK manipulation.
 
-## Key Technical Decisions
+---
 
-1. **No state management library** — React Context + prop drilling was sufficient for 3 dashboard pages with a predictable data flow
-2. **Service Role Key stays server-side** — never exposed to the browser; client uses anon key with RLS
-3. **Display name change limit** — enforced via Supabase `app_metadata` (tamper-proof, client cannot modify)
-4. **CSTR-style rate limiting** — global (200/15min) + strict routes (15/10min) per IP
-5. **Zero-Migration JSON Link Storage** — Storing both the participant `join_url` and host `start_url` in a serialized JSON object inside the single `external_url` column. This completely eliminates database schema migrations on a live production instance while enabling secure role-based redirect routing (teachers automatically gain administrative host/co-host permissions in Zoom, while students join as standard attendees).
+## 📁 Selected Files in This Excerpt
 
+| File | Core Technical Demonstration |
+| :--- | :--- |
+| [`backend/server_proxy.js`](./backend/server_proxy.js) | Express server with JWT validation, Supabase Admin operations, rate limiting, and Zoom OAuth S2S. |
+| [`frontend/components/ScheduleView.tsx`](./frontend/components/ScheduleView.tsx) | Clean React scheduler resolving and launching host vs attendee links dynamically. |
+| [`frontend/components/SyncYouTubePlayer.tsx`](./frontend/components/SyncYouTubePlayer.tsx) | Real-time state synchronization with loop-prevention references. |
+| [`frontend/contexts/AuthContext.tsx`](./frontend/contexts/AuthContext.tsx) | React Context managing active auth sessions and server-side role resolution. |
+| [`frontend/types/types.ts`](./frontend/types/types.ts) | TypeScript interfaces ensuring complete type safety for the platform data model. |
+
+---
+
+## 🛠️ Tech Stack
+
+* **Frontend:** React 19, TypeScript, Vite, React Router, TailwindCSS/Vanilla CSS, YouTube IFrame API
+* **Backend:** Node.js, Express, Supabase JS Admin SDK, Axios, Nodemailer, Express Rate Limit
+* **Database & BaaS:** PostgreSQL (with RLS), Supabase Auth, Storage, and Realtime Engine
