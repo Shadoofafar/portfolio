@@ -10,6 +10,7 @@ export interface UserProfile {
   email: string;
   role: Role;
   display_name?: string;
+  is_approved?: boolean;
 }
 
 // Hierarchical content library (3-tier structure)
@@ -27,7 +28,7 @@ export interface Topic {
 }
 
 // Dynamic attachment system
-export type AttachmentType = 'message' | 'file' | 'youtube';
+export type AttachmentType = 'message' | 'file' | 'youtube' | 'video_call';
 
 export interface Attachment {
   id: string;
@@ -35,4 +36,18 @@ export interface Attachment {
   content?: string;     // HTML for messages
   file_url?: string;    // Supabase Storage URL
   video_id?: string;    // YouTube ID for sync player
+}
+
+// Video Calling & Scheduled Classes
+export interface VideoClass {
+  id: string;
+  title: string;
+  teacher_id: string;
+  group_id?: string | null;
+  room_id: string;
+  jitsi_url?: string | null;
+  platform?: 'jitsi' | 'zoom' | 'other';
+  external_url?: string | null; // Stores Zoom serialized URLs (join_url & start_url) or custom links
+  start_time?: string;
+  duration: number; // in minutes
 }

@@ -48,9 +48,10 @@ CREATE POLICY "admin_read" ON user_profiles
 | File | What It Demonstrates |
 |------|---------------------|
 | `backend/server_proxy.js` | JWT authentication middleware, Supabase Admin SDK usage, Zoom OAuth Server-to-Server flow, rate limiting, CORS, secure user CRUD |
+| `frontend/components/ScheduleView.tsx` | UI schedule component implementing **dynamic role-based Zoom link routing** (automatic host `start_url` vs student `join_url` resolution on click) |
 | `frontend/components/SyncYouTubePlayer.tsx` | Real-time video synchronization using Supabase Broadcast channels, event loop prevention with refs |
 | `frontend/contexts/AuthContext.tsx` | React Context for global auth state, session lifecycle management, API-based role resolution |
-| `frontend/types/types.ts` | TypeScript interfaces defining the entire data model (forms, submissions, groups, learning blocks) |
+| `frontend/types/types.ts` | TypeScript interfaces defining the entire data model (including Zoom/Jitsi scheduled classes) |
 
 ## Key Technical Decisions
 
@@ -58,3 +59,5 @@ CREATE POLICY "admin_read" ON user_profiles
 2. **Service Role Key stays server-side** — never exposed to the browser; client uses anon key with RLS
 3. **Display name change limit** — enforced via Supabase `app_metadata` (tamper-proof, client cannot modify)
 4. **CSTR-style rate limiting** — global (200/15min) + strict routes (15/10min) per IP
+5. **Zero-Migration JSON Link Storage** — Storing both the participant `join_url` and host `start_url` in a serialized JSON object inside the single `external_url` column. This completely eliminates database schema migrations on a live production instance while enabling secure role-based redirect routing (teachers automatically gain administrative host/co-host permissions in Zoom, while students join as standard attendees).
+

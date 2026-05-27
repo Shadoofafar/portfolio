@@ -31,13 +31,14 @@ A production **Learning Management System** built for a Ukrainian educational no
 - 🔄 **Real-time YouTube synchronization** — teacher-controlled playback synced across all students via Supabase Broadcast channels
 - 📋 **Dynamic form builder** — configurable field types with submission analytics and Excel export
 - 👥 **User management** with JWT auth, rate limiting, and admin SDK operations
-- 📅 **Zoom API integration** — OAuth Server-to-Server meeting lifecycle management
+- 📅 **Zoom API integration** — OAuth Server-to-Server meeting lifecycle management with **dynamic role-based URL routing** (routing teachers to `start_url` for host rights and students to `join_url`)
 - 🏗️ **2,200+ LOC Document Library** with drag-and-drop, WYSIWYG editing, and file storage
 
 **Selected Files:**
 | File | Description | Lines |
 |------|-------------|-------|
 | [`server_proxy.js`](./lms-platform/backend/server_proxy.js) | Express backend — auth proxy, user CRUD, Zoom API, email, rate limiting | 700+ |
+| [`ScheduleView.tsx`](./lms-platform/frontend/components/ScheduleView.tsx) | UI calendar/table schedule with dynamic role-based Zoom link routing | 100+ |
 | [`SyncYouTubePlayer.tsx`](./lms-platform/frontend/components/SyncYouTubePlayer.tsx) | Real-time video sync via Supabase Broadcast | 170 |
 | [`AuthContext.tsx`](./lms-platform/frontend/contexts/AuthContext.tsx) | Global auth state with JWT session management | 200 |
 | [`types.ts`](./lms-platform/frontend/types/types.ts) | TypeScript interfaces for the entire data model | 130+ |
