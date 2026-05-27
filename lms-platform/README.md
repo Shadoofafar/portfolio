@@ -2,18 +2,6 @@
 
 > **Curated code excerpts** from a production-grade Learning Management System built for a Ukrainian social education initiative providing free online Chemistry & Biology classes.
 
----
-
-## 📸 Interactive Collaborative Whiteboard
-
-<p align="center">
-  <img src="./assets/whiteboard_screenshot.jpg" alt="LMS Interactive Whiteboard & Lesson Workspace" width="85%" />
-  <br />
-  <em>Fig 1: Live collaborative whiteboard screen supporting synchronized drawing, annotations, and real-time brush/color selection during lectures.</em>
-</p>
-
----
-
 ## 🚀 Key Engineering Highlights
 
 ### 1. RLS Infinite Recursion Bypass (Express Proxy)
