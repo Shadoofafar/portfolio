@@ -35,6 +35,11 @@ A production **Learning Management System** built for a Ukrainian educational no
 - 👥 **User management** with JWT auth, rate limiting, and admin SDK operations
 - 📅 **Zoom API integration** — OAuth Server-to-Server meeting lifecycle management with **dynamic role-based URL routing** (routing teachers to `start_url` for host rights and students to `join_url`)
 - 🏗️ **2,200+ LOC Document Library** with drag-and-drop, WYSIWYG editing, and file storage
+- 💬 **Interactive Pinned Chat** — mouse-resizable sidebar chat clamping width with dynamic page padding shifts, always-handy floating trigger bubble, and CSS message text wrapping
+- 🛡️ **Secure OTP Registration** — backend constraint fix and SMTP email activation integration via secure Google App Passwords
+- 👥 **Real-Time Presence Channels** — live status indicators (online/offline badges) via Supabase Broadcast
+- 📹 **Resilient Media Playback & Sniffer** — byte-range streaming for Safari/Chrome and embedded Google Docs PDF Viewer
+- 🚨 **Global ErrorBoundary Component** — premium dark-mode glossy crash fallback interface for user-friendly error diagnostics
 
 **Selected Files:**
 | File | Description | Lines |

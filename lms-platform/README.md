@@ -34,6 +34,26 @@ CREATE POLICY "admin_read" ON user_profiles FOR SELECT
 * **The Highlight:** Restricting display name changes to exactly three per user (to prevent spoofing/spamming).
 * **The Technical Detail:** Enforced this state strictly in Supabase `app_metadata`. Since browser-based clients cannot write to `app_metadata`, this implementation is 100% tamper-proof against frontend injection or client-side SDK manipulation.
 
+### 7. Interactive Mouse-Resizable Pinned Chat & Constant-Access Floating Bubble
+* **The Highlight:** A highly responsive mouse-resizable sidebar chat and an always-accessible floating contact bubble.
+* **The Technical Detail:** Implemented vanilla React mouse event listeners (`mousemove` and `mouseup` attached to `document` on drag start) to track the mouse position, clamp the chat width between `280px` and `80vw`, and persist it to `localStorage`. When the chat is pinned, it applies a matching dynamic `paddingRight` shift to the main layout container (`.app-wrapper`) to seamlessly prevent content overlap, temporarily disabling CSS layout transitions during drag events to ensure 60fps local rendering. Message bubbles employ strict CSS word-wrapping (`word-break: break-word; overflow-wrap: anywhere; white-space: pre-wrap;`) to handle varying chat widths elegantly. The floating chat action bubble stays visible on all page scroll depths for immediate access, fading out only when the drawer is open to maintain visual hygiene.
+
+### 8. Robust OTP Registration & SMTP Email Verification
+* **The Highlight:** Secure OTP-based registration and App Password SMTP delivery.
+* **The Technical Detail:** Fixed database-level schema constraints by auto-generating unique UUID/string keys for registration submissions on the Express backend before SQL insert. Reconfigured SMTP delivery using a secure Google App Password environment integration to resolve legacy SMTP blocking. Developed a robust client-side routing system that decodes clean URL activation parameters and activates profile profiles via a custom OTP input modal.
+
+### 9. Real-Time Presence & Status Tracking
+* **The Highlight:** Direct presence indicator showing user availability in the contacts list.
+* **The Technical Detail:** Configured a Supabase Broadcast Presence channel that triggers connection handshakes on drawer mounting, updating client lists in real time when users open or close browser sessions.
+
+### 10. Multi-Format Asset Player & MIME Sniffer
+* **The Highlight:** Robust playback of files and lectures from Supabase Storage without browser CORS or byte-range errors.
+* **The Technical Detail:** Implemented a MIME-sniffing file parser that overrides generic content types to matching streams (like `video/mp4` or `video/webm`) and embeds custom `playsInline` video elements to support Safari and Chrome mobile browsers. Linked documents to an embedded Google Docs Viewer iframe to prevent file download bypasses.
+
+### 11. High-Fidelity ErrorBoundary Component
+* **The Highlight:** A premium dark-mode glossy error recovery panel wrapper.
+* **The Technical Detail:** Structured a standard React ErrorBoundary class around the root `<App />` layout tree to intercept compilation, chunk-loading, or runtime state crashes, presenting an elegant recovery panel containing self-diagnostic stack-trace logs and instant navigation reset buttons.
+
 ---
 
 ## 📁 Selected Files in This Excerpt
