@@ -28,6 +28,9 @@ A production **Learning Management System** built for a Ukrainian educational no
 
 **Key Highlights:**
 - 🔐 **Backend proxy** for Supabase RLS bypass — solves infinite recursion in role-based policies
+- 🔒 **Secure Private File Access Gateway** — single-use opaque access tickets (HMAC-SHA256) preventing link sharing and storage URL leakage
+- 💬 **Hardened Chat Mutations API** — restricts direct database access and verifies active user participation server-side
+- 🛡️ **Strict Content Security Policy (CSP)** — production-grade security configuration with custom route validations and browser storage auditing rules
 - 📞 **Embedded Jitsi Video Calls** — dynamic creation of secure, password-protected classrooms inside the app
 - 🎨 **Interactive Collaborative Whiteboard** — real-time drawing canvas for interactive lecture styling
 - 🔄 **Real-time YouTube synchronization** — teacher-controlled playback synced across all students via Supabase Broadcast channels
@@ -44,7 +47,7 @@ A production **Learning Management System** built for a Ukrainian educational no
 **Selected Files:**
 | File | Description | Lines |
 |------|-------------|-------|
-| [`server_proxy.js`](./lms-platform/backend/server_proxy.js) | Express backend — auth proxy, user CRUD, Zoom API, email, rate limiting | 700+ |
+| [`server_proxy.js`](./lms-platform/backend/server_proxy.js) | Express backend — auth proxy, HMAC file tickets, chat API validation, Zoom S2S, rate limiting | 140 (Excerpts) |
 | [`ScheduleView.tsx`](./lms-platform/frontend/components/ScheduleView.tsx) | UI calendar/table schedule with dynamic role-based Zoom link routing | 100+ |
 | [`SyncYouTubePlayer.tsx`](./lms-platform/frontend/components/SyncYouTubePlayer.tsx) | Real-time video sync via Supabase Broadcast | 170 |
 | [`AuthContext.tsx`](./lms-platform/frontend/contexts/AuthContext.tsx) | Global auth state with JWT session management | 200 |

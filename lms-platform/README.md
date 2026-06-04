@@ -54,13 +54,25 @@ CREATE POLICY "admin_read" ON user_profiles FOR SELECT
 * **The Highlight:** A premium dark-mode glossy error recovery panel wrapper.
 * **The Technical Detail:** Structured a standard React ErrorBoundary class around the root `<App />` layout tree to intercept compilation, chunk-loading, or runtime state crashes, presenting an elegant recovery panel containing self-diagnostic stack-trace logs and instant navigation reset buttons.
 
+### 12. Secure Private File Access Tickets Gateway
+* **The Highlight:** Replaced default, long-lived storage URLs (susceptible to URL leakage and unauthorized sharing) with a cryptographically secure, single-use access ticket system.
+* **The Technical Detail:** Implemented a dual-phase file validation gateway. When a user requests a file, the Express backend validates user access (e.g., checks course enrollment) and generates a one-time random opaque ticket (`crypto.randomBytes(24)`). A SHA-256 HMAC hash of the ticket is stored in PostgreSQL with a 60-second expiration. Upon redemption, the ticket is fetched and atomically deleted/invalidated from the database. The server then redirects the client with a 30-second short-lived signed storage URL, enforcing strict caching controls (`Cache-Control: private, no-store`).
+
+### 13. Hardened Chat Mutations Gateway
+* **The Highlight:** Isolated database mutations behind a secure backend gateway to prevent unauthorized direct database writes.
+* **The Technical Detail:** Enforced zero-direct-client-write policies for chat messages. The client instead posts mutations to the Node.js Express backend. The proxy validates user credentials via a server-side JWT check, queries the database to confirm the authenticated user is an active participant in the target conversation, and performs the SQL insert using the administrative SDK. This prevents spoofing other users' IDs or sending messages to unauthorized channels.
+
+### 14. Production CSP Hardening & Browser Storage Security Guidelines
+* **The Highlight:** Deployed a highly restrictive Content Security Policy (CSP) while preserving third-party HTML5 simulations, combined with strict local storage compliance rules.
+* **The Technical Detail:** Audited and implemented a strict CSP configuration (`vercel.json`) filtering allowed script, frame, image, and style origins. To support dynamic legacy chemical/biological simulations (PhET simulations), securely isolated necessary permissions (`'unsafe-eval'` and `https://*.colorado.edu` origins) to prevent XSS vulnerability propagation. Added automated validation steps to ensure that user JWTs, access/refresh tokens, file signatures, and large base64-encoded strings are never written to unencrypted local storage (`localStorage`/`IndexedDB`).
+
 ---
 
 ## 📁 Selected Files in This Excerpt
 
 | File | Core Technical Demonstration |
 | :--- | :--- |
-| [`backend/server_proxy.js`](./backend/server_proxy.js) | Express server with JWT validation, Supabase Admin operations, rate limiting, and Zoom OAuth S2S. |
+| [`backend/server_proxy.js`](./backend/server_proxy.js) | Express server with JWT validation, secure private file gateway (HMAC), chat isolation, rate limiting, and Zoom S2S. |
 | [`frontend/components/ScheduleView.tsx`](./frontend/components/ScheduleView.tsx) | Clean React scheduler resolving and launching host vs attendee links dynamically. |
 | [`frontend/components/SyncYouTubePlayer.tsx`](./frontend/components/SyncYouTubePlayer.tsx) | Real-time state synchronization with loop-prevention references. |
 | [`frontend/contexts/AuthContext.tsx`](./frontend/contexts/AuthContext.tsx) | React Context managing active auth sessions and server-side role resolution. |
